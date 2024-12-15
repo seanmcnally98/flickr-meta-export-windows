@@ -188,6 +188,7 @@ if __name__ == "__main__":
   # overridden
   if "IMG_DIR" in os.environ:
     img_dir = os.environ["IMG_DIR"]
+    img_dir = os.path.abspath(img_dir)  # Convert relative path to absolute path for Windows
 
   if "TAG_MAP" in os.environ:
     map_file = os.environ["TAG_MAP"]
