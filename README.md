@@ -1,3 +1,48 @@
+# Flickr Metadata Export for Windows
+
+This is a fork of nickivanov's Flickr metadata tool, modified to work on Windows machines.  I only changed one line of code (191), but it's an important one, changing relative directory output to absolute directory output.
+
+Here's how to run this on Windows
+
+[From the Flickr Settings page](https://www.flickr.com/account/) click **Request my Flickr data**. In a day or two you
+will receive an email with two links, one for the metadata archive and another for
+the image archive.  Note that the metadata, which is what we're using here, is labeled as "Account Data" when downloading from Flickr.
+
+1) Make sure you have [Python for Windows](https://www.python.org/downloads/windows/) installed.
+   
+3) In the file list above, locate map.json, run.bat, and meta2csv.py.  Right click on each and choose "Save Link As", then download them to the same directory as the files you got from Flickr.
+   
+5) Download [exiftool](https://exiftool.org/), extract the zip and copy exiftool(-k).exe to the same directory as the other three files.  **Rename** the file to exiftool.exe, removing (-k), just to make everything easier.
+6) Extract the zip files you got from Flickr.  I'd recommend using [WinRar](https://www.win-rar.com/), which will allow you to simply highlight all your data-download zip files at once, right click, and by choosing "Extract to data-download-1", extract all the files to the same folder.
+7) Make sure the metadata is in a folder called "metadata", and your photos are all together in a folder called "data-download-1"
+8) Double-click run.bat.  This may take some time, but will generate you a CSV file called flickr.csv
+9) Put flickr.csv inside your data-download-1 folder with your images
+10) Click the address bar in Windows Explorer (where your current path is displayed), type cmd, press enter
+11) Run the following code
+
+```
+exiftool.exe -overwrite_original -csv=flickr.csv -e jpg -e png .
+```
+
+If you prefer, you can omit the -overwrite_original flag, and backups will be created, named something like `photoname.jpg_original`
+
+If you chose not to rename exiftool(-k).exe, make sure that is reflected in your command.
+
+***
+
+To put your photos into folders with the names of their original albums, run this command
+```
+exiftool -"Directory<Album" %f.%e -e jpg -e png .
+```
+
+Note that the double quotes are modified from the original readme's single quotes, which Windows cmd does not like.
+
+***
+
+Using the original readme below, you can adjust parameters, and do other things.  Just remember that step 2 below is handled by run.bat, no need to put those codes into cmd.  In fact, they won't work on cmd, which is why run.bat is necessary.
+
+# Original Readme:
+
 Flickr allows you to download your photos and metadata. Unfortunatley, the metadata
 is not stored along with the images as EXIF, XMP, IPTC or other standard format; instead
 it will be downloaded as a series of JSON files, one per image.
@@ -98,7 +143,7 @@ Optionally you can now sort your images into directories based on the Flickr alb
 they were in. Note that if any of your images belongs to multiple albums on Flickr,
 only the first album will be used to set the image metadata in step 2 above.
 
-    /path/to/exiftool -'Directory<Album' -o %f.%e -e jpg -e png .
+    /path/to/exiftool -"Directory<Album" -o %f.%e -e jpg -e png .
 
 Note that this command will create a new subdirectory for each Flickr album; make sure 
 that you run it from the directory where you want these album subdirectories to 
